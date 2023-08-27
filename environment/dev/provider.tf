@@ -9,7 +9,7 @@ terraform {
   cloud {
     organization = "urushibata-org"
     workspaces {
-      name = "aws-managed-terraform"
+      name = "urushibata-aws-management"
     }
   }
 }
@@ -22,9 +22,4 @@ provider "aws" {
       ManagedBy = "terraform"
     }
   }
-}
-
-module "organization" {
-  source      = "../../modules/organization"
-  environment = "mng"
 }

@@ -10,7 +10,7 @@ data "aws_iam_policy_document" "region_restriction" {
       "*"
     ]
     condition {
-      test = "ForAnyValue:StringEquals"
+      test     = "ForAnyValue:StringEquals"
       variable = "aws:RequestedRegion"
       values = [
         "ap-northeast-1",
