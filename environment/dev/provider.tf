@@ -9,7 +9,7 @@ terraform {
   cloud {
     organization = "urushibata-org"
     workspaces {
-      name = "urushibata-aws-management"
+      name = "aws-develop-terraform"
     }
   }
 }
