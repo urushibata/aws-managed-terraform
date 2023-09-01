@@ -11,7 +11,7 @@ resource "aws_subnet" "subnets" {
   count = 2
 
   vpc_id     = aws_vpc.main.id
-  cidr_block = cidrsubnet(var.vpc_cidr, 2, count.index)
+  cidr_block = cidrsubnet(var.vpc_cidr, 1, count.index)
 
   tags = {
     Name = "subnet-${count.index}"
@@ -32,7 +32,7 @@ resource "aws_internet_gateway_attachment" "igw_asso" {
 }
 
 resource "aws_default_network_acl" "default_acl" {
-  default_network_acl_id = aws_vpc.main.id
+  default_network_acl_id = aws_vpc.main.default_network_acl_id
 
   ingress {
     protocol   = -1
@@ -92,7 +92,7 @@ resource "aws_default_route_table" "public_rt" {
   }
 }
 
-resource "aws_route_table" "pritate_rt" {
+resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.main.id
 
   tags = {
@@ -100,9 +100,9 @@ resource "aws_route_table" "pritate_rt" {
   }
 }
 
-resource "aws_route_table_association" "a" {
+resource "aws_route_table_association" "rt_asso" {
   subnet_id      = aws_subnet.subnets[1].id
-  route_table_id = aws_route_table.pritate_rt.id
+  route_table_id = aws_route_table.private_rt.id
 }
 
 resource "aws_default_vpc_dhcp_options" "default_dhcp_op" {
@@ -113,7 +113,7 @@ resource "aws_default_vpc_dhcp_options" "default_dhcp_op" {
 
 resource "aws_vpc_endpoint" "s3" {
   vpc_id       = aws_vpc.main.id
-  service_name = "com.amazonaws.us-west-2.s3"
+  service_name = "com.amazonaws.${data.aws_region.current.name}.s3"
 
   tags = {
     Name = "s3-vpc-endpoint"
@@ -121,6 +121,6 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "example" {
-  route_table_id  = aws_route_table.pritate_rt.id
+  route_table_id  = aws_route_table.private_rt.id
   vpc_endpoint_id = aws_vpc_endpoint.s3.id
 }
