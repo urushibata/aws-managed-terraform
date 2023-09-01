@@ -26,11 +26,6 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-resource "aws_internet_gateway_attachment" "igw_asso" {
-  internet_gateway_id = aws_internet_gateway.igw.id
-  vpc_id              = aws_vpc.main.id
-}
-
 resource "aws_default_network_acl" "default_acl" {
   default_network_acl_id = aws_vpc.main.default_network_acl_id
 
